@@ -1,1 +1,5 @@
-//orders tables
+class Orders{
+
+}
+
+module.exports = Orders

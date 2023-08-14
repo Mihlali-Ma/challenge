@@ -1,21 +1,19 @@
-class Person{
-    #firstName ="";
-    constructor(firstName){
-        this.#firstName = firstName
-    }
+const {express, routes} = require('./controller')
+const path = require('path')
+const app = express()
+const port = +process.env.PORT || 3000
 
-    walk(){
-        console.log(`${this.#firstName} is walking`);
-    }
-    dancing(){
-        console.log(`${this.#firstName} dancing`);
-    }
-}
+app.use(express.static('./static'))
+app.use(
+    express.urlencoded({
+        extended:false
+    }),
+    routes
+)
+routes.get('^/$|/challenger', (req, res) =>{
+    res.sendFile(path.resolve(__dirname,'./static/html/index.html'))
+})
 
-const person1 = new person('Mihlali')
-const person2 = new person('someone')
-
-person1.walk()
-person2.dancing()
-
-// console.log(person1.#firstName);
+app.listen(port, ()=>{
+    console.log(`The server is running on port ${port}`);
+})

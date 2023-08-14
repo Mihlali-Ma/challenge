@@ -1,11 +1,14 @@
-// users tables
+
 const db = require("../config")
+const {hash, compare, hashSync} = require('bcrypt')
+const {createToken} = require('../middleware/AuthenticateUser')
+
 class Users{
     fetchUsers(req, res) {
         const query = `
         SELECT UserID, firstName, lastName,
         gender, userDOB, emailAdd,profileURL
-        FROM Users
+        FROM Users;
         `
         db.query(query,
             (err, results)=>{
@@ -22,7 +25,7 @@ class Users{
         SELECT UserID, firstName, lastName,
         gender, userDOB, emailAdd,profileURL
         FROM Users
-        WHERE UserID = ${req.params.id}
+        WHERE UserID = ${req.params.id};
         `
         db.query(query,
             (err, result)=>{
@@ -38,14 +41,37 @@ class Users{
     login(req, res){
         
     }
-    register(req, res){
-
+    async register(req, res){
+        const data = req.body
+        //encryption
+        data.userPass = await hash(data.userPass,15)
+        
+        const user = {
+            emailAdd:data.emailAdd,
+            userPass:data.userPass
+        }
+        const query = `
+        INSERT  INTO  Users
+        SET ?;
+        `
+        db.query(query, [data],(err) => {
+            if (err) throw
+            let token = createToken(Users)
+            res.cookie("Actual.User", token,
+            {
+                maxAge: 360000,
+                httpOnly: true
+            });
+            res.json({
+                msg: "You are now registered."
+            })
+        })
     }
     updateUser(req, res) {
         const query =`
         UPDATE Users
         SET?
-        WHERE UserID = ?
+        WHERE UserID = ?;
         `
         db.query(query,
             [req.body, req.params.id],
@@ -75,4 +101,4 @@ class Users{
 
 }
 
-module.exports = Users
+module.exports = Users 

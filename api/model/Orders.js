@@ -21,7 +21,7 @@ class Orders{
                 })
             })
     };
-    fetchOrders(req, res){
+    fetchOrder(req, res){
         const query = `
         SELECTE orderID, UserID, bookID,
         orderDate

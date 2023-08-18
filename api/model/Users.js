@@ -67,11 +67,7 @@ class Users{
                             userPass
                         })
                         // Save a token
-                        res.cookie("LegitUser",token, 
-                        {
-                            maxAge: 3600000,
-                            httpOnly: true
-                        })
+                        
                         if(cResult) {
                             res.json({
                                 msg: "Logged in",
@@ -81,8 +77,7 @@ class Users{
                         }else {
                             res.json({
                                 status: res.statusCode,
-                                msg:
-                                "Invalid password or you have not registered"
+                                msg: "Invalid password or you have not registered"
                             })
                         }
                     })
@@ -105,12 +100,8 @@ class Users{
         db.query(query, [data],(err) => {
             if (err) throw
             let token = createToken(Users)
-            res.cookie("Actual.User", token,
-            {
-                maxAge: 360000,
-                httpOnly: true
-            });
             res.json({
+                token,
                 msg: "You are now registered."
             })
         })

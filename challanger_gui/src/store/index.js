@@ -44,7 +44,7 @@ export default createStore({
         const {results} = await axios.get(`${cUrl}users`)
         context.commit("setUsers",data.results)
       }catch(e){
-        context.commit("setMsg")
+        context.commit("setMsggit")
       }
     }
   },
